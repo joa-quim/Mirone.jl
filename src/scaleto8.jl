@@ -1,11 +1,11 @@
 function scaleto8(G)
-	# ...
+	# Read a grid with GMT and return an image object of it scaled to [1 255]
 	add_off = 1;
 	range = 254. / (G.hdr[6] - G.hdr[5])
 	img = zeros(UInt8,  G.n_rows, G.n_columns)
+	GMT_grid_flip_vertical(convert(Ptr{Void}, pointer(G.z)), G.n_columns, G.n_rows, 0, sizeof(G.z[1]))
 	for (k = 1:G.n_columns * G.n_rows)
 		img[k] = round(UInt8, (((G.z[k] - G.hdr[5]) * range) + add_off))
-		#img[k] = UInt8(((G.z[k] - G.hdr[5]) * range) + add_off)
 	end
 
 	P = gmt("makecpt -T0/255/1")
