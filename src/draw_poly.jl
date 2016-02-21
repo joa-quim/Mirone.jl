@@ -1,3 +1,23 @@
+
+type LineSegPix
+	x1::Cint
+	x2::Cint
+	y1::Cint
+	y2::Cint
+	active::Bool
+end
+#function LineSegPix(x1, x2, y1, y2, active)
+#	x1 = 0; x2 = 0; y1 = 0; y2 = 0; active = false
+#end 
+
+const NEWPOINT = 0
+const MOVE = 1
+const CLOSE = 2
+const CENTER = 3
+const REPAINT = 4
+
+global poly_lastwhat = CLOSE
+
 #-------------------------------------------------------------------------
 # Desenha o poligono em rubber band.
 #-------------------------------------------------------------------------
@@ -60,6 +80,7 @@ function fMotionCB(hand::Ptr{Ihandle}, x::Int32, y::Int32, r::Ptr{Uint8})
 	yp = convert(Ptr{Cint}, pointer([y]))
 	cdCanvasUpdateYAxis(handles.cd_canvas, yp)
 	y = unsafe_load(yp)
+#@show(x,y)
 	polygon(handles, MOVE, x, y)
 	return IUP_DEFAULT
 end
@@ -80,7 +101,7 @@ function fButtonCB(hand::Ptr{Ihandle}, b::Char, e::Integer, x::Integer, y::Integ
 	yp = convert(Ptr{Cint}, pointer([y]))
 	cdCanvasUpdateYAxis(handles.cd_canvas, yp)
 	y = unsafe_load(yp)
-	x = int32(x)				# <=========== NAO DEVIA SER Int64
+	x = Int32(x)
 
 	set_current_point(handles.iup_canvas, [x,y])
 
@@ -88,7 +109,6 @@ function fButtonCB(hand::Ptr{Ihandle}, b::Char, e::Integer, x::Integer, y::Integ
 		if (e != 0)				# button was pressed
 			line_seg = getappdata(handles.iup_canvas, "lineSeg")
 			if (isnada(line_seg)) return IUP_DEFAULT end
-#@show(line_seg)
 			line_seg.x1 = x
 			line_seg.y1 = y
 			line_seg.active = true
