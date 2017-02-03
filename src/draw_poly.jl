@@ -48,7 +48,7 @@ function polygon(handles::Handles, what::Integer, x::Integer, y::Integer)
 		if (poly_lastwhat != CLOSE)
 			cdLine(handles.cd_canvas, line_seg.x1, line_seg.y1, line_seg.x2, line_seg.y2);        # apaga o ultimo segmento
 			# apaga o poligono temporario inteiro
-			for (i = 1:ctgc.num_points-1)
+			for i = 1:ctgc.num_points-1
 				cdCanvasLine(handles.cd_canvas, ctgc.points[i].x, ctgc.points[i].y, ctgc.points[i+1].x, ctgc.points[i+1].y);
 			end
 		end
@@ -68,14 +68,14 @@ function cmdDrawPoly(iup_canvas::Ptr{Ihandle})
 	cdCanvasClear(handles.cd_canvas); 
 	cdCanvasLineWidth(handles.cd_canvas, 3); 
 	cdCanvasLineStyle(handles.cd_canvas, IUP_CD.CD_CONTINUOUS); 
-	cdCanvasForeground(handles.cd_canvas, cdEncodeAlpha(IUP_CD.CD_DARK_MAGENTA, char(128)))
+	cdCanvasForeground(handles.cd_canvas, cdEncodeAlpha(IUP_CD.CD_DARK_MAGENTA, Char(128)))
 	cdCanvasWriteMode(handles.cd_canvas, IUP_CD.CD_NOT_XOR)
 	cdCanvasActivate(handles.cd_canvas)
 	return IUP_DEFAULT
 end
 
 # ------------------------------------------------------------------------
-function fMotionCB(hand::Ptr{Ihandle}, x::Int32, y::Int32, r::Ptr{Uint8})
+function fMotionCB(hand::Ptr{Ihandle}, x::Int32, y::Int32, r::Ptr{UInt8})
 	handles = guidata(hand)
 	yp = convert(Ptr{Cint}, pointer([y]))
 	cdCanvasUpdateYAxis(handles.cd_canvas, yp)
@@ -88,7 +88,7 @@ end
 #-------------------------------------------------------------------------
 # Function associated to the mouse buttons
 #-------------------------------------------------------------------------
-function fButtonCB(hand::Ptr{Ihandle}, b::Char, e::Integer, x::Integer, y::Integer, r::Ptr{Uint8})
+function fButtonCB(hand::Ptr{Ihandle}, b::Char, e::Integer, x::Integer, y::Integer, r::Ptr{UInt8})
 	handles = guidata(hand)
 
 	cdCanvasActivate(handles.cd_canvas)
